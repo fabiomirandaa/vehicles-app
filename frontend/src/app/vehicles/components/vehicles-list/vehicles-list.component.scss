@@ -1,63 +1,66 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// ============================================
+// Vehicles List Component
+// ============================================
+
+// Page Container
 .vehicles-page {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: $spacing-xl;
 }
 
+// Header Section
 .header {
-  margin-bottom: 2rem;
+  margin-bottom: $spacing-xl;
 
   .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+    @include flex-between;
+    margin-bottom: $spacing-lg;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: $spacing-md;
   }
 
   .header-text {
     h1 {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      margin: 0 0 0.5rem 0;
-      font-size: 2.5rem;
-      font-weight: 600;
-color: #f87171;
-  font-weight: 600;
+      gap: $spacing-xs;
+      margin: 0 0 $spacing-xs 0;
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-semibold;
+      color: $color-accent-light;
 
       mat-icon {
-        font-size: 2.5rem;
+        font-size: $font-size-3xl;
         width: 2.5rem;
         height: 2.5rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
       }
     }
 
     p {
       margin: 0;
-      color: #ffffff;
-      font-size: 1.1rem;
+      color: $color-text-primary;
+      font-size: $font-size-lg;
     }
   }
 
   .add-btn {
     height: 48px;
-    padding: 0 2rem;
-    font-size: 1rem;
-    border-radius: 24px;
-    background: #dc2626 !important;
-    color: white !important;
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
-    transition: all 0.3s ease;
+    padding: 0 $spacing-xl;
+    font-size: $font-size-md;
+    border-radius: $radius-pill;
+    background: $color-accent-primary !important;
+    color: $color-text-primary !important;
+    box-shadow: $shadow-accent;
+    transition: all $transition-normal;
 
     &:hover {
-      background: #b91c1c !important;
+      background: $color-accent-secondary !important;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.6);
+      box-shadow: $shadow-accent-hover;
     }
   }
 
@@ -68,8 +71,8 @@ color: #f87171;
 
       ::ng-deep {
         .mat-mdc-text-field-wrapper {
-          background: #1e1e1e;
-          border-radius: 28px;
+          background: $color-background-secondary;
+          border-radius: $radius-pill;
           box-shadow: none;
         }
 
@@ -77,7 +80,6 @@ color: #f87171;
           background: transparent;
         }
 
-        // Remove a borda do outline
         .mdc-notched-outline {
           .mdc-notched-outline__leading,
           .mdc-notched-outline__notch,
@@ -92,77 +94,76 @@ color: #f87171;
         }
 
         input {
-          color: #ffffff !important;
-          caret-color: #dc2626;
-          font-size: 1rem;
+          color: $color-text-primary !important;
+          caret-color: $color-accent-primary;
+          font-size: $font-size-md;
         }
 
         label {
-          color: #9e9e9e !important;
+          color: $color-text-muted !important;
         }
 
         .mat-mdc-form-field-icon-prefix {
-          color: #dc2626;
-          padding-right: 8px;
+          color: $color-accent-primary;
+          padding-right: $spacing-sm;
         }
       }
     }
   }
 }
 
+// Loading State
 .loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  @include flex-center;
+  @include flex-column;
   min-height: 400px;
-  gap: 1.5rem;
+  gap: $spacing-lg;
 
   p {
-    font-size: 1.1rem;
-    color: #ffffff;
+    font-size: $font-size-lg;
+    color: $color-text-primary;
   }
 }
 
+// Empty State
 .empty-state {
+  @include card-elevated;
   text-align: center;
-  padding: 4rem 2rem;
-  background: #1e1e1e;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  padding: $spacing-2xl $spacing-xl;
 
   mat-icon {
     font-size: 120px;
     width: 120px;
     height: 120px;
-    color: #f87171;
-    margin-bottom: 1.5rem;
+    color: $color-accent-light;
+    margin-bottom: $spacing-lg;
   }
 
   h2 {
-    margin: 0 0 0.5rem 0;
-    color: #ffffff;
-    font-size: 1.8rem;
+    margin: 0 0 $spacing-xs 0;
+    color: $color-text-primary;
+    font-size: $font-size-xl;
   }
 
   p {
-    margin: 0 0 2rem 0;
-    color: #e0e0e0;
-    font-size: 1.1rem;
+    margin: 0 0 $spacing-xl 0;
+    color: $color-text-secondary;
+    font-size: $font-size-lg;
   }
 
   button {
-    border-radius: 24px;
-    padding: 0 2rem;
+    border-radius: $radius-pill;
+    padding: 0 $spacing-xl;
     height: 48px;
   }
 }
 
+// Vehicles Grid
 .vehicles-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
-  animation: fadeIn 0.5s ease;
+  gap: $spacing-lg;
+  animation: fadeIn $transition-slow ease;
 }
 
 @keyframes fadeIn {
@@ -176,22 +177,15 @@ color: #f87171;
   }
 }
 
+// Vehicle Card
 .vehicle-card {
-  border-radius: 16px;
+  @include card-elevated;
+  @include hover-lift;
   overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-  }
 
   .card-header {
-    padding: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: $spacing-lg;
+    @include flex-between;
     position: relative;
     overflow: hidden;
 
@@ -206,81 +200,79 @@ color: #f87171;
     }
 
     .placa {
-      background: #121212;
-      padding: 0.5rem 1.25rem;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      background: $color-background-primary;
+      padding: $spacing-xs $spacing-md;
+      border-radius: $spacing-sm;
+      box-shadow: $shadow-sm;
       position: relative;
-      border: 1px solid #2a2a2a;
+      border: 1px solid $color-border-light;
 
       .placa-text {
-        font-size: 1.5rem;
-        font-weight: 700;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
         letter-spacing: 2px;
-        color: #ffffff;
+        color: $color-text-primary;
       }
     }
 
     .year-chip {
       background: rgba(30, 30, 30, 0.9);
-      color: #e0e0e0;
-      font-weight: 600;
-      font-size: 1rem;
+      color: $color-text-secondary;
+      font-weight: $font-weight-semibold;
+      font-size: $font-size-md;
     }
   }
 
   .card-body {
-    padding: 1.5rem;
+    padding: $spacing-lg;
 
     .vehicle-title {
-      margin-bottom: 1.5rem;
+      margin-bottom: $spacing-lg;
 
       h3 {
         margin: 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #e0e0e0;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-semibold;
+        color: $color-text-secondary;
       }
     }
 
     .vehicle-details {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+      @include flex-column;
+      gap: $spacing-md;
 
       .detail-item {
         display: flex;
         align-items: flex-start;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        background: #121212;
-        border-radius: 8px;
+        gap: $spacing-sm;
+        padding: $spacing-sm;
+        background: $color-background-primary;
+        border-radius: $spacing-sm;
 
         mat-icon {
-          color: #f87171;
+          color: $color-accent-light;
           font-size: 20px;
           width: 20px;
           height: 20px;
         }
 
         div {
-          display: flex;
-          flex-direction: column;
+          @include flex-column;
           gap: 0.25rem;
           flex: 1;
 
           .label {
-            font-size: 0.75rem;
-            color: #f87171;
+            font-size: $font-size-xs;
+            color: $color-accent-light;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: $font-weight-semibold;
             letter-spacing: 0.5px;
           }
 
           .value {
-            font-size: 0.95rem;
-            color: #ffffff;
-            font-weight: 500;
+            font-size: $font-size-sm;
+            color: $color-text-primary;
+            font-weight: $font-weight-medium;
           }
         }
       }
@@ -288,14 +280,14 @@ color: #f87171;
   }
 
   .card-actions {
-    padding: 0 1rem 1rem 1rem;
+    padding: 0 $spacing-md $spacing-md $spacing-md;
     display: flex;
-    gap: 0.5rem;
+    gap: $spacing-xs;
 
     button {
       flex: 1;
-      border-radius: 8px;
-      font-weight: 500;
+      border-radius: $spacing-sm;
+      font-weight: $font-weight-medium;
 
       mat-icon {
         font-size: 18px;
@@ -306,7 +298,8 @@ color: #f87171;
   }
 }
 
-@media (max-width: 768px) {
+// Responsive Design
+@include mobile {
   .vehicles-grid {
     grid-template-columns: 1fr;
   }

@@ -1,8 +1,13 @@
 @use '@angular/material' as mat;
+@use './styles/variables' as *;
+@use './styles/mixins' as *;
+
+// ============================================
+// Material Design 3 Theme Configuration
+// ============================================
 
 @include mat.core();
 
-// Define the theme using Material 3
 $theme: mat.define-theme(
   (
     color: (
@@ -12,29 +17,35 @@ $theme: mat.define-theme(
   )
 );
 
-// Apply the theme
 html {
   @include mat.all-component-themes($theme);
 }
 
-// Custom toast styles
+// ============================================
+// Toast Notifications
+// ============================================
+
 .toast-success {
-  --mdc-snackbar-container-color: #dc2626;
-  --mat-mdc-snack-bar-button-color: #fff;
-  --mdc-snackbar-supporting-text-color: #fff;
+  --mdc-snackbar-container-color: #{$color-accent-primary};
+  --mat-mdc-snack-bar-button-color: #{$color-text-primary};
+  --mdc-snackbar-supporting-text-color: #{$color-text-primary};
 }
 
 .toast-error {
-  --mdc-snackbar-container-color: #991b1b;
-  --mat-mdc-snack-bar-button-color: #fff;
-  --mdc-snackbar-supporting-text-color: #fff;
+  --mdc-snackbar-container-color: #{$color-accent-secondary};
+  --mat-mdc-snack-bar-button-color: #{$color-text-primary};
+  --mdc-snackbar-supporting-text-color: #{$color-text-primary};
 }
 
 .toast-info {
-  --mdc-snackbar-container-color: #1f2937;
-  --mat-mdc-snack-bar-button-color: #ef4444;
-  --mdc-snackbar-supporting-text-color: #fff;
+  --mdc-snackbar-container-color: #{$color-background-tertiary};
+  --mat-mdc-snack-bar-button-color: #{$color-accent-light};
+  --mdc-snackbar-supporting-text-color: #{$color-text-primary};
 }
+
+// ============================================
+// Global Resets
+// ============================================
 
 * {
   margin: 0;
@@ -49,8 +60,8 @@ body {
 }
 
 body {
-  background: #121212;
-  color: #e0e0e0;
+  background: $color-background-primary;
+  color: $color-text-secondary;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;

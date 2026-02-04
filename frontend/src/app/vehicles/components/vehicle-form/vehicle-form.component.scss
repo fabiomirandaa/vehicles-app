@@ -1,13 +1,22 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// ============================================
+// Vehicle Form Component
+// ============================================
+
+// Page Container
 .form-page {
   min-height: calc(100vh - 64px);
-  background: #121212;
-  padding: 2rem;
+  background: $color-background-primary;
+  padding: $spacing-xl;
 }
 
+// Form Container
 .form-container {
   max-width: 900px;
   margin: 0 auto;
-  animation: slideUp 0.5s ease;
+  animation: slideUp $transition-slow ease;
 }
 
 @keyframes slideUp {
@@ -21,19 +30,20 @@
   }
 }
 
+// Header
 .form-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
 
   .back-btn {
-    background: #1e1e1e;
-    color: #e0e0e0;
-    transition: all 0.3s ease;
+    background: $color-background-secondary;
+    color: $color-text-secondary;
+    transition: all $transition-normal;
 
     &:hover {
-      background: #2a2a2a;
+      background: $color-background-tertiary;
       transform: translateX(-4px);
     }
   }
@@ -44,14 +54,14 @@
     h1 {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: $spacing-sm;
       margin: 0 0 0.25rem 0;
-      font-size: 2rem;
-      font-weight: 600;
-      color: white;
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
 
       mat-icon {
-        font-size: 2rem;
+        font-size: $font-size-2xl;
         width: 2rem;
         height: 2rem;
       }
@@ -59,46 +69,46 @@
 
     p {
       margin: 0;
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 1rem;
+      color: $color-text-secondary;
+      font-size: $font-size-md;
     }
   }
 }
 
+// Loading State
 .loading-container {
-  background: #1e1e1e;
-  border-radius: 12px;
-  padding: 4rem 2rem;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  @include card-elevated;
+  @include flex-center;
+  @include flex-column;
+  padding: $spacing-2xl $spacing-xl;
 
   mat-spinner ::ng-deep circle {
-    stroke: #f87171;
+    stroke: $color-accent-light;
   }
 
   p {
-    margin-top: 1.5rem;
-    color: #e0e0e0;
-    font-size: 1.1rem;
+    margin-top: $spacing-lg;
+    color: $color-text-secondary;
+    font-size: $font-size-lg;
   }
 }
 
+// Form Card
 .form-card {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  @include card-elevated;
   overflow: hidden;
-  background: #1e1e1e;
 
   form {
-    padding: 2rem;
+    padding: $spacing-xl;
   }
 }
 
+// Form Grid
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
 
   .full-width {
     grid-column: 1 / -1;
@@ -109,7 +119,7 @@
 
     ::ng-deep {
       .mat-mdc-text-field-wrapper {
-        background: #121212;
+        background: $color-background-primary;
         border-radius: 4px;
       }
 
@@ -121,7 +131,7 @@
         .mdc-notched-outline__leading,
         .mdc-notched-outline__notch,
         .mdc-notched-outline__trailing {
-          border-color: #3a3a3a;
+          border-color: $color-border-medium;
         }
       }
 
@@ -129,48 +139,49 @@
         .mdc-notched-outline__leading,
         .mdc-notched-outline__notch,
         .mdc-notched-outline__trailing {
-          border-color: #f87171 !important;
+          border-color: $color-accent-light !important;
           border-width: 2px;
         }
       }
 
       .mat-mdc-form-field-icon-prefix {
-        color: #f87171;
-        padding-right: 8px;
+        color: $color-accent-light;
+        padding-right: $spacing-sm;
       }
 
       input {
-        font-size: 1rem;
-        color: #e0e0e0;
-        caret-color: #f87171;
+        font-size: $font-size-md;
+        color: $color-text-secondary;
+        caret-color: $color-accent-light;
       }
 
       label {
-        color: #9e9e9e !important;
+        color: $color-text-muted !important;
       }
 
       .mat-mdc-form-field-hint {
-        color: #757575;
-        font-size: 0.75rem;
+        color: $color-text-disabled;
+        font-size: $font-size-xs;
       }
     }
   }
 }
 
+// Form Actions
 .form-actions {
   display: flex;
-  gap: 1rem;
+  gap: $spacing-md;
   justify-content: flex-end;
-  padding-top: 1.5rem;
-  border-top: 1px solid #2a2a2a;
+  padding-top: $spacing-lg;
+  border-top: 1px solid $color-border-light;
 
   button {
-    padding: 0 2rem;
+    padding: 0 $spacing-xl;
     height: 40px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    border-radius: 20px;
-    transition: all 0.3s ease;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    border-radius: $radius-xl;
+    transition: all $transition-normal;
 
     mat-icon {
       font-size: 18px;
@@ -180,21 +191,21 @@
   }
 
   .cancel-btn {
-    color: #e0e0e0;
-    border-color: #3a3a3a;
+    color: $color-text-secondary;
+    border-color: $color-border-medium;
     background: transparent;
 
     &:hover {
-      background: #2a2a2a;
+      background: $color-background-tertiary;
     }
   }
 
   .submit-btn {
-    background: #dc2626;
+    background: $color-accent-primary;
     box-shadow: none;
 
     &:hover:not(:disabled) {
-      background: #b91c1c;
+      background: $color-accent-secondary;
     }
 
     &:disabled {
@@ -203,19 +214,20 @@
   }
 }
 
-@media (max-width: 768px) {
+// Responsive Design
+@include mobile {
   .form-page {
-    padding: 1rem;
+    padding: $spacing-md;
   }
 
   .form-header {
     .header-text h1 {
-      font-size: 1.5rem;
+      font-size: $font-size-xl;
     }
   }
 
   .form-card form {
-    padding: 1.5rem;
+    padding: $spacing-lg;
   }
 
   .form-grid {
