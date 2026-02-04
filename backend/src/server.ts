@@ -40,6 +40,13 @@ app.use(vehiclesRoutes);
 
 // Middleware de tratamento de erros
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // Tratar CastError do Mongoose (ID inválido)
+  if (err.name === 'CastError') {
+    return res.status(404).json({
+      message: 'Recurso não encontrado'
+    });
+  }
+
   if (err instanceof HttpError) {
     return res.status(err.statusCode).json({
       message: err.message,
