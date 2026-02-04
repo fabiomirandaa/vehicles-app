@@ -1,0 +1,97 @@
+<div class="vehicles-page">
+  <div class="header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>
+          <mat-icon>directions_car</mat-icon>
+          Meus Veículos
+        </h1>
+        <p>Gerencie sua frota com facilidade</p>
+      </div>
+      <button mat-raised-button color="primary" class="add-btn" (click)="onCreate()">
+        <mat-icon>add</mat-icon>
+        Novo Veículo
+      </button>
+    </div>
+
+    <div class="search-bar">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          placeholder="Buscar por placa, marca, modelo..."
+          (input)="onSearch($any($event.target).value)"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+
+  @if (store.loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>Carregando veículos...</p>
+    </div>
+  }
+
+  @if (!store.loading() && store.filteredVehicles().length === 0) {
+    <div class="empty-state">
+      <mat-icon>garage</mat-icon>
+      <h2>Nenhum veículo encontrado</h2>
+      <p>Adicione seu primeiro veículo para começar</p>
+      <button mat-raised-button color="primary" (click)="onCreate()">
+        <mat-icon>add</mat-icon>
+        Adicionar Veículo
+      </button>
+    </div>
+  }
+
+  @if (!store.loading() && store.filteredVehicles().length > 0) {
+    <div class="vehicles-grid">
+      @for (vehicle of store.filteredVehicles(); track vehicle.id) {
+        <mat-card class="vehicle-card">
+          <div class="card-header" [style.background]="getBrandColor(vehicle.marca)">
+            <div class="placa">
+              <span class="placa-text">{{ vehicle.placa }}</span>
+            </div>
+            <mat-chip class="year-chip">{{ vehicle.ano }}</mat-chip>
+          </div>
+
+          <mat-card-content class="card-body">
+            <div class="vehicle-title">
+              <h3>{{ vehicle.marca }} {{ vehicle.modelo }}</h3>
+            </div>
+
+            <div class="vehicle-details">
+              <div class="detail-item">
+                <mat-icon>build</mat-icon>
+                <div>
+                  <span class="label">Chassi</span>
+                  <span class="value">{{ vehicle.chassi }}</span>
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <mat-icon>description</mat-icon>
+                <div>
+                  <span class="label">Renavam</span>
+                  <span class="value">{{ vehicle.renavam }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions class="card-actions">
+            <button mat-button color="primary" (click)="onEdit(vehicle)">
+              <mat-icon>edit</mat-icon>
+              Editar
+            </button>
+            <button mat-button color="warn" (click)="onDelete(vehicle)">
+              <mat-icon>delete</mat-icon>
+              Excluir
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 import { connectDatabase } from './config/database';
@@ -9,6 +10,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Accept'],
+}));
 app.use(express.json());
 
 // Swagger Documentation

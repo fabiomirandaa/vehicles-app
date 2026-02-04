@@ -1,0 +1,57 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// Define the theme using Material 3
+$theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: mat.$red-palette,
+    ),
+  )
+);
+
+// Apply the theme
+html {
+  @include mat.all-component-themes($theme);
+}
+
+// Custom toast styles
+.toast-success {
+  --mdc-snackbar-container-color: #dc2626;
+  --mat-mdc-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.toast-error {
+  --mdc-snackbar-container-color: #991b1b;
+  --mat-mdc-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.toast-info {
+  --mdc-snackbar-container-color: #1f2937;
+  --mat-mdc-snack-bar-button-color: #ef4444;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: #121212;
+  color: #e0e0e0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}

@@ -1,0 +1,111 @@
+<div class="form-page">
+  <div class="form-container">
+    <div class="form-header">
+      <button mat-icon-button class="back-btn" (click)="onCancel()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-text">
+        <h1>
+          <mat-icon>{{ isEditMode ? 'edit' : 'add_circle' }}</mat-icon>
+          {{ isEditMode ? 'Editar Veículo' : 'Novo Veículo' }}
+        </h1>
+        <p>{{ isEditMode ? 'Atualize as informações do veículo' : 'Preencha os dados do novo veículo' }}</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Carregando...</p>
+      </div>
+    }
+
+    @if (!loading()) {
+      <mat-card class="form-card">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-grid">
+            <!-- Placa -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Placa</mat-label>
+              <mat-icon matPrefix>credit_card</mat-icon>
+              <input matInput formControlName="placa" placeholder="ABC-1234" maxlength="8" />
+              @if (form.get('placa')?.invalid && form.get('placa')?.touched) {
+                <mat-error>{{ getErrorMessage('placa') }}</mat-error>
+              }
+              <mat-hint>7-8 caracteres</mat-hint>
+            </mat-form-field>
+
+            <!-- Marca e Modelo -->
+            <mat-form-field appearance="outline">
+              <mat-label>Marca</mat-label>
+              <mat-icon matPrefix>business</mat-icon>
+              <input matInput formControlName="marca" placeholder="Honda" />
+              @if (form.get('marca')?.invalid && form.get('marca')?.touched) {
+                <mat-error>{{ getErrorMessage('marca') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Modelo</mat-label>
+              <mat-icon matPrefix>directions_car</mat-icon>
+              <input matInput formControlName="modelo" placeholder="Civic" />
+              @if (form.get('modelo')?.invalid && form.get('modelo')?.touched) {
+                <mat-error>{{ getErrorMessage('modelo') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Ano -->
+            <mat-form-field appearance="outline">
+              <mat-label>Ano</mat-label>
+              <mat-icon matPrefix>event</mat-icon>
+              <input matInput type="number" formControlName="ano" [placeholder]="currentYear.toString()" />
+              @if (form.get('ano')?.invalid && form.get('ano')?.touched) {
+                <mat-error>{{ getErrorMessage('ano') }}</mat-error>
+              }
+              <mat-hint>1886 - {{ currentYear + 1 }}</mat-hint>
+            </mat-form-field>
+
+            <!-- Chassi -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Chassi</mat-label>
+              <mat-icon matPrefix>build</mat-icon>
+              <input matInput formControlName="chassi" placeholder="9BWZZZ377VT004251" maxlength="17" />
+              @if (form.get('chassi')?.invalid && form.get('chassi')?.touched) {
+                <mat-error>{{ getErrorMessage('chassi') }}</mat-error>
+              }
+              <mat-hint>17 caracteres</mat-hint>
+            </mat-form-field>
+
+            <!-- Renavam -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Renavam</mat-label>
+              <mat-icon matPrefix>description</mat-icon>
+              <input matInput formControlName="renavam" placeholder="12345678901" maxlength="11" />
+              @if (form.get('renavam')?.invalid && form.get('renavam')?.touched) {
+                <mat-error>{{ getErrorMessage('renavam') }}</mat-error>
+              }
+              <mat-hint>11 dígitos</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button mat-stroked-button type="button" (click)="onCancel()" class="cancel-btn">
+              <mat-icon>close</mat-icon>
+              Cancelar
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="form.invalid || store.loading()"
+              class="submit-btn"
+            >
+              <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+              {{ isEditMode ? 'Salvar Alterações' : 'Criar Veículo' }}
+            </button>
+          </div>
+        </form>
+      </mat-card>
+    }
+  </div>
+</div>
