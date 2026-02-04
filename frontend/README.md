@@ -1,300 +1,406 @@
-# Vehicles App - Frontend
+# 🚗 Vehicles App - Frontend
 
-Aplicação Angular 19 para gerenciamento de veículos, consumindo API REST com arquitetura moderna, standalone components, signals para state management e boas práticas de desenvolvimento.
+Aplicação web moderna para gerenciamento de veículos construída com Angular 19, Material Design 3 e arquitetura baseada em Signals.
 
-## 🚀 Tecnologias
+## 📋 Índice
 
-- **Angular 19** - Framework principal
-- **TypeScript 5.7** - Tipagem forte
-- **Angular Material 19** - Componentes UI
-- **Signals** - State management moderno
-- **Reactive Forms** - Formulários reativos com validação
-- **RxJS 7.8** - Programação reativa
-- **Jasmine/Karma** - Testes unitários
-- **ESLint + Prettier** - Linting e formatação
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Tecnologias](#tecnologias)
+- [Arquitetura](#arquitetura)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
+- [Execução](#execução)
+- [Estrutura de Pastas](#estrutura-de-pastas)
+- [Padrões de Código](#padrões-de-código)
+- [Testes](#testes)
+- [Build](#build)
 
-## 📁 Estrutura do Projeto
+## 🎯 Sobre o Projeto
+
+Sistema completo de CRUD para gerenciamento de veículos com interface moderna, responsiva e seguindo as diretrizes do Material Design 3 Dark Theme.
+
+### Funcionalidades
+
+- ✅ Listagem de veículos com busca em tempo real
+- ✅ Cadastro de novos veículos
+- ✅ Edição de veículos existentes
+- ✅ Exclusão de veículos com confirmação
+- ✅ Validação de formulários com feedback visual
+- ✅ Notificações toast para ações do usuário
+- ✅ Design responsivo para mobile e desktop
+- ✅ Tema dark com paleta vermelha/preta
+
+## 🛠 Tecnologias
+
+- **Angular 19.1.0** - Framework principal
+- **Angular Material 19.1.0** - Componentes UI (Material Design 3)
+- **TypeScript 5.7.2** - Linguagem de programação
+- **RxJS 7.8.0** - Programação reativa
+- **SCSS** - Pré-processador CSS com variáveis e mixins
+- **Signals** - Sistema de reatividade do Angular
+- **Standalone Components** - Arquitetura sem NgModules
+- **ESLint + Prettier** - Qualidade de código
+
+## 🏗 Arquitetura
+
+### Padrão Arquitetural
+
+O projeto segue uma **arquitetura simplificada baseada em features**, sem as camadas excessivas de Clean Architecture, utilizando as melhores práticas da comunidade Angular:
 
 ```
-src/
-├── app/
-│   ├── core/                       # Infraestrutura global
-│   │   ├── interceptors/           # HTTP interceptors
-│   │   │   ├── http-error.interceptor.ts
-│   │   │   ├── http-headers.interceptor.ts
-│   │   │   └── skip-error-toast.token.ts
-│   │   ├── models/                 # Models globais
-│   │   │   └── error.model.ts
-│   │   └── services/               # Serviços globais
-│   │       ├── error-handling.service.ts
-│   │       └── toast.service.ts
-│   │
-│   ├── features/                   # Features do app
-│   │   └── vehicles/               # Feature de veículos
-│   │       ├── data-access/        # Camada de dados
-│   │       │   ├── vehicles-api.service.ts
-│   │       │   ├── vehicles-api.service.spec.ts
-│   │       │   ├── vehicles.store.ts
-│   │       │   └── vehicles.store.spec.ts
-│   │       ├── models/             # Tipos e interfaces
-│   │       │   └── vehicle.model.ts
-│   │       ├── pages/              # Páginas (rotas)
-│   │       │   ├── vehicle-create/
-│   │       │   ├── vehicle-edit/
-│   │       │   └── vehicles-list/
-│   │       ├── ui/                 # Componentes UI
-│   │       │   ├── vehicle-form/
-│   │       │   └── vehicles-table/
-│   │       └── vehicles.routes.ts
-│   │
-│   ├── shared/                     # Componentes compartilhados
-│   │   └── components/
-│   │       └── confirm-dialog/
-│   │
-│   ├── app.component.ts            # Root component
-│   ├── app.config.ts               # Configuração do app
-│   └── app.routes.ts               # Rotas principais
+src/app/
+├── core/                    # Módulo central da aplicação
+│   ├── interceptors/        # HTTP interceptors
+│   ├── services/            # Serviços globais (Toast, Error Handling)
+│   └── models/              # Modelos de dados compartilhados
 │
-├── environments/                   # Ambientes
-│   ├── environment.ts
-│   └── environment.prod.ts
-│
-└── styles.scss                     # Estilos globais
+└── vehicles/                # Feature de veículos
+    ├── components/          # Componentes da feature
+    │   ├── vehicles-list/   # Listagem e busca
+    │   └── vehicle-form/    # Formulário create/edit
+    ├── services/            # Serviços da feature
+    │   ├── vehicles.service.ts    # HTTP API
+    │   └── vehicles.store.ts      # State management
+    └── models/              # Interfaces e DTOs
 ```
 
-## 🏗️ Arquitetura
+### Gerenciamento de Estado
 
-### Standalone Components
-- Sem NgModules, usando `bootstrapApplication`
-- Componentes standalone em toda aplicação
-- Lazy loading por feature
+Utiliza **Signals** (nativo do Angular) para state management reativo:
 
-### State Management
-- **Signals** para estado reativo
-- VehiclesStore com:
-  - `vehicles` - Lista de veículos
-  - `loading` - Estado de carregamento
-  - `error` - Erro atual
-  - `filter` - Filtro de busca
-  - `filteredVehicles` - Computed signal
-  - `hasVehicles`, `isEmpty` - Computed helpers
+```typescript
+// vehicles.store.ts
+vehicles = signal<Vehicle[]>([]);
+loading = signal(false);
+searchTerm = signal('');
 
-### Camadas
-1. **Core**: Interceptors, error handling, services globais
-2. **Features**: Domínios da aplicação (vehicles)
-   - **data-access**: Services, stores, queries
-   - **ui**: Componentes UI puros
-   - **pages**: Componentes de rota
-   - **models**: Tipos e interfaces
-3. **Shared**: Componentes reutilizáveis
+// Computed signals
+filteredVehicles = computed(() => {
+  const term = this.searchTerm().toLowerCase();
+  return this.vehicles().filter(v => /* filtro */);
+});
+```
 
-### HTTP & Error Handling
-- Interceptors para headers e tratamento de erros
-- Normalização de erros HTTP
-- Toast service para feedback
-- `SKIP_ERROR_TOAST` token para pular toasts específicos
+### Estilização (SCSS)
 
-## 🔧 Configuração
+Sistema de **Design Tokens** centralizado:
 
-### Pré-requisitos
-- Node.js 20+
-- npm ou yarn
+```scss
+// _variables.scss
+$color-background-primary: #121212;
+$color-accent-primary: #dc2626;
+$spacing-xl: 2rem;
+$radius-pill: 28px;
 
-### Instalação
+// _mixins.scss
+@mixin flex-center { /* ... */ }
+@mixin card-elevated { /* ... */ }
+```
+
+## 📦 Pré-requisitos
+
+- **Node.js** >= 20.x
+- **npm** >= 10.x
+- **Angular CLI** 19.x (instalado globalmente)
 
 ```bash
-cd frontend
+npm install -g @angular/cli@19
+```
+
+## 🚀 Instalação
+
+1. **Clone o repositório:**
+```bash
+git clone <repository-url>
+cd vehicles-app/frontend
+```
+
+2. **Instale as dependências:**
+```bash
 npm install
 ```
 
-### Configurar Environment
+3. **Configure as variáveis de ambiente:**
+
+Crie/edite `src/environments/environment.ts`:
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000/api'
+};
+```
+
+## 💻 Execução
+
+### Desenvolvimento
+
+```bash
+npm start
+# ou
+ng serve
+```
+
+Acesse: **http://localhost:4200**
+
+O servidor recarrega automaticamente ao detectar mudanças nos arquivos.
+
+### Com Hot Module Replacement (HMR)
+
+```bash
+ng serve --hmr
+```
+
+### Modo de Produção (local)
+
+```bash
+ng serve --configuration production
+```
+
+## 📁 Estrutura de Pastas
+
+```
+frontend/
+├── src/
+│   ├── app/
+│   │   ├── core/                     # Funcionalidades centrais
+│   │   │   ├── interceptors/         # HTTP interceptors
+│   │   │   │   ├── http-error.interceptor.ts
+│   │   │   │   └── http-headers.interceptor.ts
+│   │   │   ├── services/             # Serviços globais
+│   │   │   │   ├── toast.service.ts
+│   │   │   │   └── error-handling.service.ts
+│   │   │   └── models/
+│   │   │       └── error.model.ts
+│   │   │
+│   │   ├── vehicles/                 # Feature de veículos
+│   │   │   ├── components/
+│   │   │   │   ├── vehicles-list/
+│   │   │   │   │   ├── vehicles-list.component.ts
+│   │   │   │   │   ├── vehicles-list.component.html
+│   │   │   │   │   └── vehicles-list.component.scss
+│   │   │   │   └── vehicle-form/
+│   │   │   │       ├── vehicle-form.component.ts
+│   │   │   │       ├── vehicle-form.component.html
+│   │   │   │       └── vehicle-form.component.scss
+│   │   │   ├── services/
+│   │   │   │   ├── vehicles.service.ts      # HTTP API client
+│   │   │   │   └── vehicles.store.ts        # State management
+│   │   │   └── models/
+│   │   │       └── vehicle.model.ts
+│   │   │
+│   │   ├── app.component.ts          # Componente raiz
+│   │   ├── app.config.ts             # Configuração da app
+│   │   └── app.routes.ts             # Rotas da aplicação
+│   │
+│   ├── styles/                       # Estilos globais (SCSS)
+│   │   ├── _variables.scss           # Design tokens
+│   │   └── _mixins.scss              # Mixins reutilizáveis
+│   │
+│   ├── environments/                 # Ambientes
+│   │   ├── environment.ts            # Desenvolvimento
+│   │   └── environment.prod.ts       # Produção
+│   │
+│   ├── styles.scss                   # Estilos globais principais
+│   ├── index.html                    # HTML principal
+│   └── main.ts                       # Bootstrap da aplicação
+│
+├── angular.json                      # Configuração do Angular CLI
+├── tsconfig.json                     # Configuração TypeScript
+├── package.json                      # Dependências
+└── README.md                         # Este arquivo
+```
+
+## 📝 Padrões de Código
+
+### TypeScript/Angular
+
+- **Standalone Components**: Todos os componentes são standalone (sem NgModules)
+- **Signals**: Uso de signals para estado reativo
+- **Injeção de Dependências**: Uso de `inject()` function-based
+- **OnPush Change Detection**: Otimização de performance
+- **Reactive Forms**: Validação e manipulação de formulários
+
+### Convenções de Nomenclatura
+
+```typescript
+// Componentes
+VehiclesListComponent       // PascalCase + Component suffix
+
+// Serviços
+VehiclesService            // PascalCase + Service suffix
+VehiclesStore              // PascalCase + Store suffix
+
+// Interfaces
+Vehicle                    // PascalCase
+VehicleCreateDto          // PascalCase + Dto suffix
+
+// Variáveis/Funções
+filteredVehicles          // camelCase
+onDelete()                // camelCase + verbos para métodos
+```
+
+### SCSS
+
+```scss
+// Use variáveis ao invés de valores hard-coded
+.button {
+  background: $color-accent-primary;  // ✅ Correto
+  padding: $spacing-md;               // ✅ Correto
+  border-radius: $radius-pill;        // ✅ Correto
+}
+
+// Use mixins para padrões repetidos
+.card {
+  @include card-elevated;             // ✅ Correto
+  @include hover-lift;                // ✅ Correto
+}
+
+// BEM naming para componentes
+.vehicle-card {
+  &__header { }
+  &__body { }
+  &--active { }
+}
+```
+
+## 🧪 Testes
+
+### Executar testes unitários
+
+```bash
+npm test
+# ou
+ng test
+```
+
+### Executar com coverage
+
+```bash
+ng test --code-coverage
+```
+
+O relatório de cobertura será gerado em `coverage/`.
+
+### Executar testes E2E
+
+```bash
+ng e2e
+```
+
+## 🏭 Build
+
+### Build de Produção
+
+```bash
+npm run build
+# ou
+ng build --configuration production
+```
+
+Os arquivos otimizados serão gerados em `dist/vehicles-app-frontend/`.
+
+### Características do Build de Produção
+
+- ✅ Minificação de código
+- ✅ Tree-shaking
+- ✅ AOT Compilation
+- ✅ Otimização de bundles
+- ✅ Source maps para debug
+
+### Analisar tamanho do bundle
+
+```bash
+ng build --stats-json
+npx webpack-bundle-analyzer dist/vehicles-app-frontend/stats.json
+```
+
+## 🎨 Tema e Estilização
+
+### Design System
+
+O projeto utiliza **Material Design 3** com tema **Dark** e paleta de cores personalizada:
+
+- **Primária**: Vermelho (#dc2626, #b91c1c, #f87171)
+- **Background**: Preto/Cinza (#121212, #1e1e1e, #2a2a2a)
+- **Texto**: Branco (#ffffff, #e0e0e0)
+
+### Customização
+
+Para alterar o tema, edite `src/styles/_variables.scss`:
+
+```scss
+// Cores principais
+$color-accent-primary: #dc2626;      // Vermelho principal
+$color-background-primary: #121212;  // Fundo escuro
+
+// Espaçamentos
+$spacing-md: 1rem;
+
+// Tipografia
+$font-size-md: 1rem;
+```
+
+## 🔌 Integração com Backend
+
+### Configuração da API
 
 Edite `src/environments/environment.ts`:
 
 ```typescript
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000', // URL da API backend
+  apiUrl: 'http://localhost:3000/api'  // URL do backend
 };
 ```
 
-Para produção, edite `src/environments/environment.prod.ts`.
+### Endpoints Utilizados
 
-## 🚀 Executando
+- `GET /vehicles` - Listar veículos
+- `GET /vehicles/:id` - Buscar veículo por ID
+- `POST /vehicles` - Criar veículo
+- `PUT /vehicles/:id` - Atualizar veículo
+- `DELETE /vehicles/:id` - Excluir veículo
 
-### Desenvolvimento
+## 🐛 Troubleshooting
 
+### Erro: "Can't find stylesheet to import"
+
+Execute:
 ```bash
-npm start
+rm -rf node_modules package-lock.json
+npm install
 ```
 
-Aplicação disponível em `http://localhost:4200`
+### Erro de CORS
 
-### Build
+Certifique-se de que o backend está com CORS habilitado para `http://localhost:4200`.
 
+### Hot Reload não funciona
+
+Limpe o cache:
 ```bash
-# Desenvolvimento
-npm run build
-
-# Produção
-npm run build -- --configuration production
+ng cache clean
+ng serve
 ```
 
-### Testes
+## 📚 Documentação Adicional
 
-```bash
-# Executar testes
-npm test
+- [Angular Docs](https://angular.dev)
+- [Angular Material](https://material.angular.io)
+- [RxJS](https://rxjs.dev)
+- [TypeScript](https://www.typescriptlang.org)
 
-# Testes com coverage
-npm run test:coverage
-```
+## 👥 Contribuindo
 
-### Lint
+1. Crie uma branch: `git checkout -b feature/nova-feature`
+2. Faça commit: `git commit -m 'feat: adiciona nova feature'`
+3. Push: `git push origin feature/nova-feature`
+4. Abra um Pull Request
 
-```bash
-npm run lint
-```
+## 📄 Licença
 
-## 🎯 Funcionalidades
-
-### Listagem de Veículos
-- Tabela responsiva com todos os veículos
-- Busca/filtro em tempo real por:
-  - Placa
-  - Marca
-  - Modelo
-  - Chassi
-  - Renavam
-- Loading states e skeleton
-- Empty states
-- Ações de editar e excluir
-
-### Criar Veículo
-- Formulário reativo com validações:
-  - **Placa**: 7-8 caracteres (suporta Mercosul)
-  - **Chassi**: 17 caracteres obrigatórios
-  - **Renavam**: 11 dígitos obrigatórios
-  - **Modelo/Marca**: obrigatórios, mínimo 1 caractere
-  - **Ano**: entre 1886 e ano atual + 1
-- Transformação automática (uppercase para placa/chassi)
-- Feedback de erro com mensagens acessíveis
-- Toast de sucesso/erro
-
-### Editar Veículo
-- Carrega dados do veículo por ID
-- Loading skeleton durante carregamento
-- Mesmo formulário do create, reutilizado
-- Guard: navega para list se veículo não for encontrado
-- Atualiza lista sem reload
-
-### Excluir Veículo
-- Dialog de confirmação acessível
-- Exclusão otimista (remove da lista antes da API)
-- Rollback automático se der erro
-- Toast de feedback
-
-## 🎨 UI/UX
-
-### Acessibilidade
-- ARIA labels em todos os inputs
-- `aria-invalid` e `aria-describedby` para erros
-- Navegação por teclado
-- Foco correto ao abrir modals
-- Dialog com `cdkFocusInitial`
-
-### Performance
-- `OnPush` change detection em todos os componentes
-- `trackBy` nas listas
-- Computed signals para derivações
-- Lazy loading de features
-- HTTP interceptors otimizados
-
-### Estados
-- **Loading**: Spinners e skeleton screens
-- **Empty**: Mensagens amigáveis e ações
-- **Error**: Mensagens claras com detalhes
-- **Success**: Toasts de confirmação
-
-## 🧪 Testes
-
-### Cobertura
-- **VehiclesApiService**: Mock HTTP calls
-- **VehiclesStore**: States, actions, errors
-- **VehicleFormComponent**: Validações, submit, transformações
-
-### Executar
-
-```bash
-# Rodar testes
-npm test
-
-# Com coverage
-npm run test:coverage
-
-# Ver relatório
-open coverage/vehicles-app-frontend/index.html
-```
-
-## 🛠️ Desenvolvimento
-
-### Path Aliases
-
-Configurado no `tsconfig.json`:
-
-```typescript
-import { ... } from '@core/...';
-import { ... } from '@shared/...';
-import { ... } from '@features/...';
-import { ... } from '@environments/...';
-```
-
-### Criar Novo Componente
-
-```bash
-ng generate component features/vehicles/ui/new-component --standalone --change-detection=OnPush
-```
-
-### Criar Novo Service
-
-```bash
-ng generate service features/vehicles/data-access/new-service
-```
-
-## 🔌 Integração com Backend
-
-A aplicação consome a API REST do backend:
-
-- **GET** `/vehicles` - Listar todos
-- **GET** `/vehicles/:id` - Buscar por ID
-- **POST** `/vehicles` - Criar
-- **PUT** `/vehicles/:id` - Atualizar
-- **DELETE** `/vehicles/:id` - Excluir
-
-Certifique-se de que o backend está rodando em `http://localhost:3000` (ou ajuste no environment).
-
-## 📝 Boas Práticas Implementadas
-
-✅ Standalone APIs sem NgModules  
-✅ Signals para state management  
-✅ Reactive Forms com validações completas  
-✅ OnPush change detection  
-✅ TrackBy em listas  
-✅ HTTP interceptors  
-✅ Error handling centralizado  
-✅ Toast service para feedback  
-✅ Lazy loading por feature  
-✅ Acessibilidade (ARIA)  
-✅ Testes unitários  
-✅ ESLint + Prettier  
-✅ TypeScript strict mode  
-✅ Path aliases  
-
-## 🎯 Próximos Passos (Extras)
-
-- [ ] Paginação client-side
-- [ ] Ordenação por coluna
-- [ ] Máscaras de input (placa, chassi)
+Este projeto está sob a licença MIT.
+- [ ] Autenticação e cadastro
 - [ ] Validação avançada de placa (Mercosul vs antiga)
 - [ ] Dark mode
 - [ ] Internacionalização (i18n)
@@ -307,4 +413,5 @@ MIT
 
 ## 👨‍💻 Autor
 
+Fábio Miranda
 Vehicles App - Frontend com Angular 19
